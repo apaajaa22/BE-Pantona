@@ -6,11 +6,12 @@ const {
   deleteKategori,
   getDetailKategori,
 } = require("../controller/kategori")
+const auth = require("../middlewares/auth")
 
 kategori.get("/", getKategori)
 kategori.get("/:id", getDetailKategori)
-kategori.post("/post", createKategori)
-kategori.put("/update", updateKategori)
-kategori.delete("/delete", deleteKategori)
+kategori.post("/post", auth, createKategori)
+kategori.put("/update", auth, updateKategori)
+kategori.delete("/delete", auth, deleteKategori)
 
 module.exports = kategori

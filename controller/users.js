@@ -51,7 +51,7 @@ exports.login = async (req, res) => {
       },
       APP_KEY,
       {
-        expiresIn: "1h",
+        expiresIn: "24h",
       }
     )
     return res.status(200).json({

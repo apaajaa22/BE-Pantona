@@ -1,5 +1,6 @@
 const Produk = require("../model/produk")
 const {Op} = require("sequelize")
+const Kategori = require("../model/kategori")
 const APP_UPLOAD_ROUTE = "/uploads"
 const APP_URL = "http://localhost:8080"
 
@@ -31,15 +32,18 @@ exports.getProduk = async (req, res) => {
     const count = await Produk.count()
     const nextPage =
       page < Math.ceil(count / limit)
-        ? `${APP_URL}/api/v1/produk?page=${page + 1}`
+        ? `${APP_URL}/api/v1/produk?page=${parseInt(page) + 1}`
         : null
     const prevPage =
-      page > 1 ? `${APP_URL}/api/v1/produk?page=${page - 1}` : null
+      page > 1 ? `${APP_URL}/api/v1/produk?page=${parseInt(page) - 1}` : null
     const produk = await Produk.findAll({
       where: {
         name: {
           [Op.substring]: search,
         },
+      },
+      include: {
+        model: Kategori,
       },
       limit,
       offset: (page - 1) * limit,
@@ -85,18 +89,18 @@ exports.getDetailProduk = async (req, res) => {
 
 exports.getProdukByKategori = async (req, res) => {
   try {
-    let {kategoriId = 1, limit = 5, page = 1} = req.query
+    let {kategoriId = 1, limit = 6, page = 1} = req.query
     const count = await Produk.count()
     const nextPage =
       page < Math.ceil(count / limit)
         ? `${APP_URL}/api/v1/produk/kategori?kategoriId=${kategoriId}&page=${
-            page + 1
+            parseInt(page) + 1
           }`
         : null
     const prevPage =
       page > 1
         ? `${APP_URL}/api/v1/produk/kategori?kategoriId=${kategoriId}&page=${
-            page - 1
+            parseInt(page) - 1
           }`
         : null
     const produk = await Produk.findAll({
